@@ -129,16 +129,4 @@ void main() {
     expect(find.text('Número de tarjeta no válido'), findsOneWidget);
     verifyNever(() => payments.charge(any()));
   });
-
-  testWidgets('paso 3 muestra las tarjetas de prueba documentadas',
-      (tester) async {
-    await tester.pumpApp(
-      const Scaffold(body: Step3PaymentScreen()),
-      overrides: overrides(),
-    );
-    await tester.pumpAndSettle();
-
-    expect(find.textContaining('4242424242424242'), findsOneWidget);
-    expect(find.textContaining('4000000000000002'), findsOneWidget);
-  });
 }

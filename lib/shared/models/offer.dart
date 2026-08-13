@@ -3,6 +3,34 @@ import 'custom_field.dart';
 import 'geo_point.dart';
 import 'user.dart';
 
+enum OfferStatus {
+  published,
+  inactive,
+  closed;
+
+  static OfferStatus parse(String? raw) {
+    switch (raw?.toLowerCase().trim()) {
+      case 'inactive':
+        return OfferStatus.inactive;
+      case 'closed':
+        return OfferStatus.closed;
+      case 'published':
+      default:
+        return OfferStatus.published;
+    }
+  }
+
+  String get apiValue => name;
+
+  String get label => switch (this) {
+        OfferStatus.published => 'Activa',
+        OfferStatus.inactive => 'Desactivada',
+        OfferStatus.closed => 'Cerrada',
+      };
+
+  bool get isPublished => this == OfferStatus.published;
+}
+
 enum ContractType {
   temporal,
   fijo,
@@ -86,11 +114,11 @@ class Offer {
     this.deadline,
     this.customAnswers = const <String, dynamic>{},
     this.questions = const <OfferQuestion>[],
-    this.active = true,
+    this.status = OfferStatus.published,
     this.createdAt,
     this.likesCount = 0,
     this.liked = false,
-    this.applicationsCount = 0,
+    this.applicantsCount = 0,
     this.publisher,
     this.myApplicationStatus,
   });
@@ -107,11 +135,11 @@ class Offer {
   final DateTime? deadline;
   final Map<String, dynamic> customAnswers;
   final List<OfferQuestion> questions;
-  final bool active;
+  final OfferStatus status;
   final DateTime? createdAt;
   final int likesCount;
   final bool liked;
-  final int applicationsCount;
+  final int applicantsCount;
 
   /// Solo llega poblado cuando el usuario autenticado es el ganador.
   /// El API se encarga de ocultarlo; la app simplemente respeta el nulo.
@@ -134,12 +162,13 @@ class Offer {
       deadline: asDate(json['deadline']),
       customAnswers: asMap(json['customAnswers']),
       questions: asModelList(json['questions'], OfferQuestion.fromJson),
-      active: asBool(pick(json, ['active', 'isActive']), fallback: true),
+      status: OfferStatus.parse(asStringOrNull(json['status'])),
       createdAt: asDate(json['createdAt']),
       likesCount: asInt(pick(json, ['likes', 'likesCount'])) ?? 0,
       liked: asBool(pick(json, ['liked', 'likedByMe'])),
-      applicationsCount:
-          asInt(pick(json, ['applicationsCount', 'applicants', 'totalApplications'])) ?? 0,
+      applicantsCount: asInt(
+        pick(json, ['applicantsCount', 'applicationsCount', 'applicants', 'totalApplications']),
+      ) ?? 0,
       publisher: publisherJson is Map ? User.fromJson(asMap(publisherJson)) : null,
       myApplicationStatus: asStringOrNull(
         pick(json, ['myApplicationStatus', 'applicationStatus']),
@@ -159,4 +188,6 @@ class Offer {
   }
 
   bool get hasLocation => location != null;
+
+  bool get isPublished => status.isPublished;
 }

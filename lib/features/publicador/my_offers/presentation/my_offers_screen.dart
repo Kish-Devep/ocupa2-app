@@ -6,6 +6,7 @@ import '../../../../core/config/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../shared/models/offer.dart';
 import '../../../../shared/widgets/async_view.dart';
 import '../../../../shared/widgets/empty_view.dart';
 import '../../../../shared/widgets/error_snackbar.dart';
@@ -90,6 +91,20 @@ class MyOffersScreen extends ConsumerWidget {
               separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
               itemBuilder: (context, index) {
                 final offer = items[index];
+                final statusPalette = switch (offer.status) {
+                  OfferStatus.published => (
+                      AppColors.statusWinnerBg,
+                      AppColors.statusWinnerFg,
+                    ),
+                  OfferStatus.inactive => (
+                      AppColors.surfaceContainerHighest,
+                      AppColors.onSurfaceVariant,
+                    ),
+                  OfferStatus.closed => (
+                      AppColors.statusFinalistBg,
+                      AppColors.statusFinalistFg,
+                    ),
+                };
                 return OfferCard(
                   offer: offer,
                   onTap: () => context.push(AppRoutes.offerDetail(offer.id)),
@@ -98,18 +113,14 @@ class MyOffersScreen extends ConsumerWidget {
                       Row(
                         children: [
                           StatusBadge.custom(
-                            label: offer.active ? 'Activa' : 'Desactivada',
-                            background: offer.active
-                                ? AppColors.statusWinnerBg
-                                : AppColors.surfaceContainerHighest,
-                            foreground: offer.active
-                                ? AppColors.statusWinnerFg
-                                : AppColors.onSurfaceVariant,
+                            label: offer.status.label,
+                            background: statusPalette.$1,
+                            foreground: statusPalette.$2,
                           ),
                           const SizedBox(width: AppSpacing.xs),
                           Text(
-                            '${offer.applicationsCount} '
-                            '${offer.applicationsCount == 1 ? "aplicante" : "aplicantes"}',
+                            '${offer.applicantsCount} '
+                            '${offer.applicantsCount == 1 ? "aplicante" : "aplicantes"}',
                             style: AppTypography.labelMd,
                           ),
                         ],
@@ -126,7 +137,7 @@ class MyOffersScreen extends ConsumerWidget {
                               label: const Text('Ver aplicantes'),
                             ),
                           ),
-                          if (offer.active) ...[
+                          if (offer.status.isPublished) ...[
                             const SizedBox(width: AppSpacing.xs),
                             IconButton(
                               tooltip: 'Desactivar',

@@ -29,8 +29,8 @@ void main() {
           Offer.fromJson(<String, dynamic>{
             ...offerJson,
             'id': 'o2',
-            'active': false,
-            'applicationsCount': 1,
+            'status': 'inactive',
+            'applicantsCount': 1,
           }),
         ]);
 
@@ -49,7 +49,7 @@ void main() {
   testWidgets('solo la oferta activa ofrece el botón de desactivar',
       (tester) async {
     when(() => offers.myOffers()).thenAnswer((_) async => <Offer>[
-          Offer.fromJson(<String, dynamic>{...offerJson, 'active': false}),
+          Offer.fromJson(<String, dynamic>{...offerJson, 'status': 'inactive'}),
         ]);
 
     await mockNetworkImagesFor(() async {

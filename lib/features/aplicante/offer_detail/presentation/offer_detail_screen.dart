@@ -121,9 +121,9 @@ class OfferDetailScreen extends ConsumerWidget {
                             background: AppColors.tertiaryFixed,
                             foreground: AppColors.tertiary,
                           ),
-                        if (!offer.active)
+                        if (!offer.status.isPublished)
                           StatusBadge.custom(
-                            label: 'Desactivada',
+                            label: offer.status.label,
                             background: AppColors.errorContainer,
                             foreground: AppColors.onErrorContainer,
                           ),
@@ -177,7 +177,7 @@ class OfferDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            if (offer.active)
+            if (offer.status.isPublished)
               ApplyFormSection(offer: offer)
             else
               Card(
