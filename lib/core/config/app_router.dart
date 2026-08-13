@@ -9,10 +9,13 @@ import '../../features/aplicante/auth/presentation/login_screen.dart';
 import '../../features/aplicante/auth/presentation/register_screen.dart';
 import '../../features/aplicante/auth/state/session_controller.dart';
 import '../../features/aplicante/experiences/presentation/experiences_screen.dart';
+import '../../features/aplicante/likes/presentation/my_likes_screen.dart'; // <-- NUEVO
 import '../../features/aplicante/offer_detail/presentation/offer_detail_screen.dart';
 import '../../features/aplicante/profile/presentation/change_password_screen.dart';
 import '../../features/aplicante/profile/presentation/complete_profile_screen.dart';
 import '../../features/aplicante/profile/presentation/my_profile_screen.dart';
+import '../../features/foro/presentation/forum_detail_screen.dart'; // <-- NUEVO
+import '../../features/foro/presentation/forum_screen.dart'; // <-- NUEVO
 import '../../features/publicador/contracts/presentation/my_contracts_screen.dart';
 import '../../features/publicador/home/presentation/home_screen.dart';
 import '../../features/publicador/my_offers/presentation/my_offers_screen.dart';
@@ -46,9 +49,12 @@ class AppRoutes {
   static const String about = '/about';
   static const String myPayments = '/my-payments';
   static const String myContracts = '/my-contracts';
+  static const String myLikes = '/my-likes'; // <-- NUEVO
+  static const String forum = '/forum'; // <-- NUEVO
 
   static String offerDetail(String id) => '/offers/$id';
   static String offerApplicants(String id) => '/my-offers/$id/applicants';
+  static String forumDetail(String id) => '/forum/$id'; // <-- NUEVO
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -84,7 +90,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (!loggedIn) return isPublic ? null : AppRoutes.login;
 
       // Guard 2: con sesión pero perfil incompleto → completar perfil.
-      // (Módulo 2 del mandato: obligatorio en el primer acceso.)
       if (!user.profileCompleted && location != AppRoutes.completeProfile) {
         return AppRoutes.completeProfile;
       }
@@ -107,7 +112,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (_, __) => const CompleteProfileScreen(),
       ),
 
-      // Shell con la barra inferior de 5 destinos del mockup.
+      // Shell con la barra inferior
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
         builder: (context, state, child) => MainShell(child: child),
@@ -165,6 +170,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.myContracts,
         builder: (_, __) => const MyContractsScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.myLikes,
+        builder: (_, __) => const MyLikesScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.forum,
+        builder: (_, __) => const ForumScreen(),
+      ),
+      GoRoute(
+        path: '/forum/:id',
+        builder: (_, state) =>
+            ForumDetailScreen(topicId: state.pathParameters['id']!),
       ),
     ],
   );

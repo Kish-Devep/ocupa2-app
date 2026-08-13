@@ -1,5 +1,6 @@
 import '../../core/network/api_client.dart';
 import '../../core/network/json.dart';
+import '../models/like_result.dart';
 import '../models/offer.dart';
 import '../models/offer_input.dart';
 
@@ -31,6 +32,12 @@ class OffersRepository {
         parse: (data) => asModelList(data, Offer.fromJson),
       );
 
+  /// GET /me/likes
+  Future<List<Offer>> myLikes() => _client.get<List<Offer>>(
+        '/me/likes',
+        parse: (data) => asModelList(data, Offer.fromJson),
+      );
+
   /// POST /offers — body 1:1 con el schema `OfferInput`.
   Future<Offer> create(OfferInput input) => _client.post<Offer>(
         '/offers',
@@ -44,15 +51,15 @@ class OffersRepository {
         parse: (_) {},
       );
 
-  /// POST /offers/{id}/like — idempotente, devuelve el total de likes.
-  Future<int> like(String id) => _client.post<int>(
+  /// POST /offers/{id}/like — devuelve el objeto LikeResult
+  Future<LikeResult> like(String id) => _client.post<LikeResult>(
         '/offers/$id/like',
-        parse: (data) => asInt(asMap(data)['likes']) ?? 0,
+        parse: (data) => LikeResult.fromJson(asMap(data)),
       );
 
-  /// DELETE /offers/{id}/like
-  Future<int> unlike(String id) => _client.delete<int>(
+  /// DELETE /offers/{id}/like — devuelve el objeto LikeResult
+  Future<LikeResult> unlike(String id) => _client.delete<LikeResult>(
         '/offers/$id/like',
-        parse: (data) => asInt(asMap(data)['likes']) ?? 0,
+        parse: (data) => LikeResult.fromJson(asMap(data)),
       );
 }
