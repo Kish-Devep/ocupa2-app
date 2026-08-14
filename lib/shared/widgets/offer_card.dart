@@ -6,6 +6,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/utils/date_formats.dart';
 import '../models/offer.dart';
+import 'offer_like_button.dart'; // <-- NUEVO IMPORT
 import 'status_badge.dart';
 
 /// Card de oferta usada en Explorar, Inicio y Mis ofertas.
@@ -105,6 +106,9 @@ class OfferCard extends StatelessWidget {
                       'Hasta ${DateFormats.short(offer.deadline)}',
                       style: AppTypography.labelMd,
                     ),
+                  const SizedBox(width: AppSpacing.xs),
+                  // --- NUEVO: BOTÓN DE LIKE INTEGRAD0 ---
+                  OfferLikeButton(offer: offer),
                 ],
               ),
               if (footer != null) ...[

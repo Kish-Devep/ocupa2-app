@@ -91,6 +91,20 @@ class MyProfileScreen extends ConsumerWidget {
                   subtitle: 'Sigue el estado de tus postulaciones',
                   onTap: () => context.push(AppRoutes.myApplications),
                 ),
+                // --- NUEVO: OPCIÓN MIS ME GUSTA ---
+                _NavTile(
+                  icon: Icons.favorite_outline,
+                  title: 'Mis me gusta',
+                  subtitle: 'Ofertas guardadas en tus favoritos',
+                  onTap: () => context.push(AppRoutes.myLikes),
+                ),
+                // --- NUEVO: OPCIÓN FORO ---
+                _NavTile(
+                  icon: Icons.forum_outlined,
+                  title: 'Foro de la comunidad',
+                  subtitle: 'Pregunta, debate y comparte con otros usuarios',
+                  onTap: () => context.push(AppRoutes.forum),
+                ),
                 _NavTile(
                   icon: Icons.receipt_long_outlined,
                   title: 'Mis pagos',

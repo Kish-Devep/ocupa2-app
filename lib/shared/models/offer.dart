@@ -117,7 +117,7 @@ class Offer {
     this.status = OfferStatus.published,
     this.createdAt,
     this.likesCount = 0,
-    this.liked = false,
+    this.likedByMe = false, // <-- Cambiado de `liked` a `likedByMe`
     this.applicantsCount = 0,
     this.publisher,
     this.myApplicationStatus,
@@ -138,7 +138,7 @@ class Offer {
   final OfferStatus status;
   final DateTime? createdAt;
   final int likesCount;
-  final bool liked;
+  final bool likedByMe; // <-- Cambiado de `liked` a `likedByMe`
   final int applicantsCount;
 
   /// Solo llega poblado cuando el usuario autenticado es el ganador.
@@ -146,6 +146,51 @@ class Offer {
   final User? publisher;
 
   final String? myApplicationStatus;
+
+  /// Permite crear copias modificadas de la oferta para actualizaciones optimistas en la UI
+  Offer copyWith({
+    String? id,
+    String? jobTypeKey,
+    String? jobTypeName,
+    ContractType? contractType,
+    String? description,
+    String? address,
+    String? photo,
+    GeoPoint? location,
+    OfferPayment? payment,
+    DateTime? deadline,
+    Map<String, dynamic>? customAnswers,
+    List<OfferQuestion>? questions,
+    OfferStatus? status,
+    DateTime? createdAt,
+    int? likesCount,
+    bool? likedByMe,
+    int? applicantsCount,
+    User? publisher,
+    String? myApplicationStatus,
+  }) {
+    return Offer(
+      id: id ?? this.id,
+      jobTypeKey: jobTypeKey ?? this.jobTypeKey,
+      jobTypeName: jobTypeName ?? this.jobTypeName,
+      contractType: contractType ?? this.contractType,
+      description: description ?? this.description,
+      address: address ?? this.address,
+      photo: photo ?? this.photo,
+      location: location ?? this.location,
+      payment: payment ?? this.payment,
+      deadline: deadline ?? this.deadline,
+      customAnswers: customAnswers ?? this.customAnswers,
+      questions: questions ?? this.questions,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      likesCount: likesCount ?? this.likesCount,
+      likedByMe: likedByMe ?? this.likedByMe,
+      applicantsCount: applicantsCount ?? this.applicantsCount,
+      publisher: publisher ?? this.publisher,
+      myApplicationStatus: myApplicationStatus ?? this.myApplicationStatus,
+    );
+  }
 
   factory Offer.fromJson(JsonMap json) {
     final publisherJson = pick(json, ['publisher', 'owner', 'publicante', 'user']);
@@ -165,7 +210,7 @@ class Offer {
       status: OfferStatus.parse(asStringOrNull(json['status'])),
       createdAt: asDate(json['createdAt']),
       likesCount: asInt(pick(json, ['likes', 'likesCount'])) ?? 0,
-      liked: asBool(pick(json, ['liked', 'likedByMe'])),
+      likedByMe: asBool(pick(json, ['liked', 'likedByMe'])), // <-- Asigna a likedByMe
       applicantsCount: asInt(
         pick(json, ['applicantsCount', 'applicationsCount', 'applicants', 'totalApplications']),
       ) ?? 0,
