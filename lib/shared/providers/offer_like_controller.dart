@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../features/aplicante/likes/state/my_likes_controller.dart';
 import '../../core/network/api_exception.dart';
 import '../models/offer.dart';
 import 'offers_provider.dart';
@@ -25,6 +26,7 @@ class OfferLikeNotifier extends StateNotifier<Offer> {
         likedByMe: result.liked,
         likesCount: result.likesCount,
       );
+      _ref.invalidate(myLikesControllerProvider);
     } on ApiException {
       state = previous;
       rethrow;

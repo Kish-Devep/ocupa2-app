@@ -35,7 +35,9 @@ class MyLikesScreen extends ConsumerWidget {
             );
           }
           return RefreshIndicator(
-            onRefresh: () => ref.read(myLikesControllerProvider.notifier).refresh(),
+            onRefresh: () async {
+              ref.invalidate(myLikesControllerProvider);
+            },
             child: ListView.separated(
               padding: const EdgeInsets.all(AppSpacing.containerMargin),
               itemCount: items.length,

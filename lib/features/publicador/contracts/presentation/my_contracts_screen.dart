@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/config/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -12,7 +13,6 @@ import '../../../../shared/widgets/empty_view.dart';
 import '../../../../shared/widgets/status_badge.dart';
 import '../state/my_contracts_controller.dart';
 
-/// Extra del mandato: se crea automáticamente al marcar status = winner.
 class MyContractsScreen extends ConsumerWidget {
   const MyContractsScreen({super.key});
 
@@ -62,56 +62,64 @@ class MyContractsScreen extends ConsumerWidget {
                     : contract.contratante;
 
                 return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                contract.jobTypeName ?? 'Contrato',
-                                style: AppTypography.labelLg,
-                              ),
-                            ),
-                            StatusBadge.custom(
-                              label: contract.status.label,
-                              background: palette.$1,
-                              foreground: palette.$2,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSpacing.base),
-                        Text(
-                          contract.soyContratante
-                              ? 'Contrataste a ${counterpart?.nombre ?? "—"}'
-                              : 'Te contrató ${counterpart?.nombre ?? "—"}',
-                          style: AppTypography.bodyMd,
-                        ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Wrap(
-                          spacing: AppSpacing.md,
-                          runSpacing: AppSpacing.base,
-                          children: [
-                            if (contract.salary != null)
-                              Text(
-                                DateFormats.money(
-                                  contract.salary,
-                                  contract.currency,
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    onTap: () => context.push(AppRoutes.contractDetail(contract.id)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  contract.jobTypeName ?? 'Contrato',
+                                  style: AppTypography.labelLg,
                                 ),
-                                style: AppTypography.labelLg
-                                    .copyWith(color: AppColors.primary),
                               ),
-                            if (contract.startDate != null)
-                              Text('Inicio: ${DateFormats.short(contract.startDate)}',
-                                  style: AppTypography.labelMd),
-                            if (contract.duration != null)
-                              Text('Duración: ${contract.duration}',
-                                  style: AppTypography.labelMd),
-                          ],
-                        ),
-                      ],
+                              StatusBadge.custom(
+                                label: contract.status.label,
+                                background: palette.$1,
+                                foreground: palette.$2,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.base),
+                          Text(
+                            contract.soyContratante
+                                ? 'Contrataste a ${counterpart?.nombre ?? "—"}'
+                                : 'Te contrató ${counterpart?.nombre ?? "—"}',
+                            style: AppTypography.bodyMd,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Wrap(
+                            spacing: AppSpacing.md,
+                            runSpacing: AppSpacing.base,
+                            children: [
+                              if (contract.salary != null)
+                                Text(
+                                  DateFormats.money(
+                                    contract.salary,
+                                    contract.currency,
+                                  ),
+                                  style: AppTypography.labelLg
+                                      .copyWith(color: AppColors.primary),
+                                ),
+                              if (contract.startDate != null)
+                                Text(
+                                  'Inicio: ${DateFormats.short(contract.startDate)}',
+                                  style: AppTypography.labelMd,
+                                ),
+                              if (contract.duration != null)
+                                Text(
+                                  'Duración: ${contract.duration}',
+                                  style: AppTypography.labelMd,
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
