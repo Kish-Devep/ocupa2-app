@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../aplicante/applications/state/my_applications_controller.dart';
 import '../../../../shared/models/application.dart';
 import '../../../../shared/providers/applications_provider.dart';
 import '../../contracts/state/my_contracts_controller.dart';
 
-/// GET /offers/{id}/applications + PATCH /applications/{id}.
 class OfferApplicantsController
     extends AutoDisposeFamilyAsyncNotifier<List<Application>, String> {
   @override
@@ -35,10 +35,11 @@ class OfferApplicantsController
         );
     _replace(updated);
 
-    // status = winner crea un contrato automáticamente en el backend.
     if (status == ApplicationStatus.winner) {
       ref.invalidate(myContractsProvider);
     }
+    
+    ref.invalidate(myApplicationsControllerProvider);
   }
 
   Future<void> setRating(String applicationId, int rating) async {

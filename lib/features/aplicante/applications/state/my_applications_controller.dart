@@ -20,6 +20,5 @@ final myApplicationsControllerProvider =
   MyApplicationsController.new,
 );
 
-/// Filtro local por estado, para las pestañas de la pantalla.
 final applicationsFilterProvider =
     StateProvider.autoDispose<ApplicationStatus?>((ref) => null);

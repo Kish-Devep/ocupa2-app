@@ -2,7 +2,6 @@ import '../../core/network/json.dart';
 import 'offer.dart';
 import 'user.dart';
 
-/// Estados documentados en `PATCH /applications/{id}`.
 enum ApplicationStatus {
   applied,
   discarded,
@@ -25,7 +24,6 @@ enum ApplicationStatus {
 
   String get apiValue => name;
 
-  /// Etiquetas en español exactamente como en los mockups.
   String get label => switch (this) {
         ApplicationStatus.applied => 'En revisión',
         ApplicationStatus.discarded => 'Descartado',
@@ -67,14 +65,8 @@ class Application {
   final String id;
   final ApplicationStatus status;
   final String? offerId;
-
-  /// Presente en GET /me/applications (la oferta a la que apliqué).
   final Offer? offer;
-
-  /// Presente en GET /offers/{id}/applications (identidad del aplicante,
-  /// visible solo para el dueño de la oferta).
   final User? applicant;
-
   final String? comment;
   final List<ApplicationAnswer> answers;
   final int? rating;
