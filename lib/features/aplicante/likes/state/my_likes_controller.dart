@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../shared/models/offer.dart';
 import '../../../../shared/providers/offers_provider.dart';
 
-class MyLikesController extends AsyncNotifier<List<Offer>> {
+class MyLikesController extends AutoDisposeAsyncNotifier<List<Offer>> {
   @override
   Future<List<Offer>> build() =>
       ref.watch(offersRepositoryProvider).myLikes();
@@ -16,6 +16,6 @@ class MyLikesController extends AsyncNotifier<List<Offer>> {
 }
 
 final myLikesControllerProvider =
-    AsyncNotifierProvider<MyLikesController, List<Offer>>(
+    AsyncNotifierProvider.autoDispose<MyLikesController, List<Offer>>(
   MyLikesController.new,
 );

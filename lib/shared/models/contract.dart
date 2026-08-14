@@ -47,6 +47,45 @@ class ContractParty {
   }
 }
 
+class ContractComment {
+  const ContractComment({
+    required this.by,
+    required this.body,
+    required this.createdAt,
+  });
+
+  final ContractParty? by;
+  final String body;
+  final DateTime? createdAt;
+
+  factory ContractComment.fromJson(JsonMap json) => ContractComment(
+        by: ContractParty.fromJson(json['by']),
+        body: asString(json['body']),
+        createdAt: asDate(json['createdAt']),
+      );
+}
+
+class ContractPhoto {
+  const ContractPhoto({
+    required this.by,
+    required this.url,
+    required this.description,
+    required this.createdAt,
+  });
+
+  final ContractParty? by;
+  final String url;
+  final String description;
+  final DateTime? createdAt;
+
+  factory ContractPhoto.fromJson(JsonMap json) => ContractPhoto(
+        by: ContractParty.fromJson(json['by']),
+        url: asString(json['url']),
+        description: asString(json['description']),
+        createdAt: asDate(json['createdAt']),
+      );
+}
+
 class Contract {
   const Contract({
     required this.id,
@@ -62,6 +101,11 @@ class Contract {
     this.duration,
     this.createdAt,
     this.acceptedAt,
+    this.cancelJustification,
+    this.cancelledBy,
+    this.cancelledAt,
+    this.comments = const <ContractComment>[],
+    this.photos = const <ContractPhoto>[],
   });
 
   final String id;
@@ -70,13 +114,18 @@ class Contract {
   final String? jobTypeName;
   final ContractParty? contratante;
   final ContractParty? contratado;
-  final String? myRole; // contratante | contratado
+  final String? myRole;
   final double? salary;
   final String? currency;
   final DateTime? startDate;
   final String? duration;
   final DateTime? createdAt;
   final DateTime? acceptedAt;
+  final String? cancelJustification;
+  final ContractParty? cancelledBy;
+  final DateTime? cancelledAt;
+  final List<ContractComment> comments;
+  final List<ContractPhoto> photos;
 
   factory Contract.fromJson(JsonMap json) => Contract(
         id: asString(pick(json, ['id', '_id'])),
@@ -92,7 +141,13 @@ class Contract {
         duration: asStringOrNull(json['duration']),
         createdAt: asDate(json['createdAt']),
         acceptedAt: asDate(json['acceptedAt']),
+        cancelJustification: asStringOrNull(json['cancelJustification']),
+        cancelledBy: ContractParty.fromJson(json['cancelledBy']),
+        cancelledAt: asDate(json['cancelledAt']),
+        comments: asModelList(json['comments'], ContractComment.fromJson),
+        photos: asModelList(json['photos'], ContractPhoto.fromJson),
       );
 
   bool get soyContratante => myRole == 'contratante';
+  bool get soyContratado => myRole == 'contratado';
 }
