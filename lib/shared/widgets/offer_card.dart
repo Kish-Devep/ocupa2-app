@@ -6,7 +6,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/utils/date_formats.dart';
 import '../models/offer.dart';
-import 'offer_like_button.dart'; // <-- NUEVO IMPORT
+import 'offer_like_button.dart';
 import 'status_badge.dart';
 
 /// Card de oferta usada en Explorar, Inicio y Mis ofertas.
@@ -53,8 +53,11 @@ class OfferCard extends StatelessWidget {
                         const SizedBox(height: AppSpacing.base),
                         Row(
                           children: [
-                            const Icon(Icons.location_on_outlined,
-                                size: 16, color: AppColors.onSurfaceVariant),
+                            const Icon(
+                              Icons.location_on_outlined,
+                              size: 16,
+                              color: AppColors.onSurfaceVariant,
+                            ),
                             const SizedBox(width: 2),
                             Expanded(
                               child: Text(
@@ -66,6 +69,23 @@ class OfferCard extends StatelessWidget {
                             ),
                           ],
                         ),
+                        if (offer.applicantsCount > 0) ...[
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.people_outline,
+                                size: 16,
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${offer.applicantsCount} ${offer.applicantsCount == 1 ? 'interesado' : 'interesados'}',
+                                style: AppTypography.bodyMd,
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -107,7 +127,6 @@ class OfferCard extends StatelessWidget {
                       style: AppTypography.labelMd,
                     ),
                   const SizedBox(width: AppSpacing.xs),
-                  // --- NUEVO: BOTÓN DE LIKE INTEGRAD0 ---
                   OfferLikeButton(offer: offer),
                 ],
               ),
@@ -147,8 +166,10 @@ class _Thumb extends StatelessWidget {
                     Container(color: AppColors.surfaceContainer),
                 errorWidget: (_, __, ___) => Container(
                   color: AppColors.surfaceContainer,
-                  child: const Icon(Icons.image_not_supported_outlined,
-                      color: AppColors.outline),
+                  child: const Icon(
+                    Icons.image_not_supported_outlined,
+                    color: AppColors.outline,
+                  ),
                 ),
               ),
       ),
